@@ -4,12 +4,27 @@ Description: >
   sam-bedrock-app
 
   Sample SAM Template for sam-bedrock-app
+  
+Parameters:
+  SourceIp:
+    Type: String
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 300
+    Timeout: 60
     MemorySize: 128
+  Api:
+    Auth:
+      ResourcePolicy:
+        CustomStatements:
+        - Effect: Allow
+          Principal: "*"
+          Action: execute-api:Invoke
+          Resource: "*"
+          Condition:
+            IpAddress:
+              aws:SourceIp: !Sub ${SourceIp}
 
 Resources:
   BedrockAppFunction:
